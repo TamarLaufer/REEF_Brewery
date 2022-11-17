@@ -9,7 +9,10 @@ const Header = () => {
   return (
     <Navbar bg='light' expand='lg' sticky='top'>
       <Container fluid>
-        <Navbar.Brand href='#'>
+        <Navbar.Brand
+          style={{ cursor: "pointer" }}
+          onClick={() => setShowFavorites(false)}
+        >
           <Badge className='bg-success xl' style={{ fontSize: 24 }}>
             REEF Breweries
           </Badge>

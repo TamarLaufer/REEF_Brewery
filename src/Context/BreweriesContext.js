@@ -1,5 +1,6 @@
 import React, { useContext, useState, useEffect } from "react";
-import BreweryCard from "../Components/BreweryCard";
+import url from "../Utils/URLs";
+import useGeolocation from "react-hook-geolocation";
 import useLocalSorage from "../Hooks/LocalStorage";
 
 const BreweriesContext = React.createContext();
@@ -17,9 +18,27 @@ export const BreweriesProvider = ({ children }) => {
   const FAVORITES_KEY = "favorites";
   const [showFavorites, setShowFavorites] = useState(false);
   const [cardInFavorites, setCardInFavorites] = useState(false);
+  const [breweriesByDistance, setBreweriesByDistance] = useState([]);
+  const [askForLocation, setAskForLocation] = useState(false);
+
+  const geolocation = useGeolocation();
+
+  // const onGeolocationUpdate = (geolocation) => {
+  //   console.log(
+  //     "Here’s some new data from the Geolocation API: ",
+  //     geolocation.latitude,
+  //     geolocation.longitude
+  //   );
+  // };
+
+  // const askLocation = useGeolocation(
+  //   {},
+  //   onGeolocationUpdate(geolocation),
+  //   false
+  // );
 
   const getAllBreweries = () => {
-    fetch("https://api.openbrewerydb.org/breweries")
+    fetch(url.allBreweriesFetch())
       .then((res) => res.json())
       .then(
         (result) => {
@@ -34,7 +53,28 @@ export const BreweriesProvider = ({ children }) => {
       );
   };
 
+  const getBreweriesByDistance = (latitude, longitude) => {
+    fetch(url.sortByLocationFetch(latitude, longitude))
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          // setLoading(true);
+          setBreweriesByDistance(result);
+          console.log(result);
+        },
+        (error) => {
+          setLoading(true);
+          setError(error);
+        }
+      );
+  };
+
   useEffect(() => {
+    console.log(
+      getBreweriesByDistance(geolocation.latitude, geolocation.longitude)
+    );
+    // console.log(askLocation);
+    // setAskForLocation(true);
     getAllBreweries();
     setFavorites(loadFavorites());
   }, []);
