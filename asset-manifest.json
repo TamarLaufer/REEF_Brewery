@@ -1,14 +1,14 @@
 {
   "files": {
     "main.css": "/REEF_Brewery/static/css/main.905fee61.css",
-    "main.js": "/REEF_Brewery/static/js/main.577186fe.js",
+    "main.js": "/REEF_Brewery/static/js/main.65060164.js",
     "static/media/breweryImg.jpg": "/REEF_Brewery/static/media/breweryImg.fd62c00a32368bc4dffb.jpg",
     "index.html": "/REEF_Brewery/index.html",
     "main.905fee61.css.map": "/REEF_Brewery/static/css/main.905fee61.css.map",
-    "main.577186fe.js.map": "/REEF_Brewery/static/js/main.577186fe.js.map"
+    "main.65060164.js.map": "/REEF_Brewery/static/js/main.65060164.js.map"
   },
   "entrypoints": [
     "static/css/main.905fee61.css",
-    "static/js/main.577186fe.js"
+    "static/js/main.65060164.js"
   ]
 }
