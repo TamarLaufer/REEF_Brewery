@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { Badge, Button, Container, Form, Nav, Navbar } from "react-bootstrap";
+import { Badge, Button, Container, Nav, Navbar } from "react-bootstrap";
 import { useBreweries } from "../Context/BreweriesContext";
 
 const Header = () => {
-  const { setShowFavorites, setShowSortedByDistance } = useBreweries();
+  const { setShowView, view } = useBreweries();
 
   return (
     <Navbar bg='light' expand='lg' sticky='top'>
       <Container fluid>
         <Navbar.Brand
           style={{ cursor: "pointer" }}
-          onClick={() => setShowFavorites(false)}
+          onClick={() => setShowView(view.ALL)}
         >
           <Badge className='bg-success xl' style={{ fontSize: 24 }}>
             REEF Breweries
@@ -28,8 +28,7 @@ const Header = () => {
             <Button
               variant='outline-success'
               onClick={() => {
-                setShowFavorites(false);
-                setShowSortedByDistance(false);
+                setShowView(view.ALL);
               }}
             >
               All Breweries
@@ -38,8 +37,7 @@ const Header = () => {
             <Button
               variant='outline-success'
               onClick={() => {
-                setShowFavorites(false);
-                setShowSortedByDistance(true);
+                setShowView(view.BY_DISTANCE);
               }}
             >
               All Breweries sorted by distance
@@ -47,8 +45,7 @@ const Header = () => {
             <Button
               variant='outline-success'
               onClick={() => {
-                setShowFavorites(true);
-                setShowSortedByDistance(false);
+                setShowView(view.FAVORITES);
               }}
             >
               Favorites

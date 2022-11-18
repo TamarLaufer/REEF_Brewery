@@ -1,24 +1,25 @@
 import React, { useContext, useState, useEffect } from "react";
 import url from "../Utils/URLs";
-import useGeolocation from "react-hook-geolocation";
-import useLocalSorage from "../Hooks/LocalStorage";
 
 const BreweriesContext = React.createContext();
 
 export function useBreweries() {
   return useContext(BreweriesContext);
 }
-
 export const BreweriesProvider = ({ children }) => {
+  const view = {
+    ALL: "all",
+    FAVORITES: "favorites",
+    BY_DISTANCE: "by distance",
+  };
   const [allBreweries, setAllBreweries] = useState([]);
   const [error, setError] = useState(null);
   const [favorites, setFavorites] = useState([]);
-  const [showFavorites, setShowFavorites] = useState(false);
+  const [showView, setShowView] = useState(view.ALL);
   const [cardInFavorites, setCardInFavorites] = useState(false);
   const [breweriesByDistance, setBreweriesByDistance] = useState([]);
   const [showSortedByDistance, setShowSortedByDistance] = useState(false);
   const FAVORITES_KEY = "favorites";
-  const BREWERIES_BY_DISTANCE = "breweriesByDistance";
 
   const getAllBreweries = () => {
     fetch(url.allBreweriesFetch())
@@ -69,24 +70,20 @@ export const BreweriesProvider = ({ children }) => {
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
   };
 
-  const loadBreweriesByDistance = () => {
-    const json = localStorage.getItem(BREWERIES_BY_DISTANCE);
-    if (json) return JSON.parse(json);
-    return [];
-  };
-
-  const saveBreweriesByDistance = (breweriesByDistance) => {
-    localStorage.setItem(
-      BREWERIES_BY_DISTANCE,
-      JSON.stringify(breweriesByDistance)
-    );
+  const getBreweryList = () => {
+    if (showView === view.ALL) {
+      return allBreweries;
+    } else if (showView === view.FAVORITES) {
+      return favorites;
+    }
+    return breweriesByDistance;
   };
 
   const addToFavorites = (id) => {
     const favExist = favorites.find((item) => item.id === id);
     if (favExist) return;
     setFavorites((prevFavorites) => {
-      const thisFav = allBreweries?.find((item) => item.id === id);
+      const thisFav = getBreweryList().find((item) => item.id === id);
       if (thisFav) {
         saveFavorites([...prevFavorites, thisFav]);
         return [...prevFavorites, thisFav];
@@ -108,14 +105,16 @@ export const BreweriesProvider = ({ children }) => {
         allBreweries,
         addToFavorites,
         removeFromFavorites,
-        showFavorites,
-        setShowFavorites,
+        showView,
+        setShowView,
+        view,
         cardInFavorites,
         setCardInFavorites,
         showSortedByDistance,
         setShowSortedByDistance,
         breweriesByDistance,
         setBreweriesByDistance,
+        getBreweryList,
       }}
     >
       {children}
