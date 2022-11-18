@@ -37,13 +37,12 @@ export const BreweryCard = ({ brewery }) => {
       </Card.Header>
 
       <Card.Body
-        className='d-flex justify-content-center align-items-between flex-wrap bg-light'
+        className='d-flex justify-content-center align-items-center flex-direction-col flex-wrap bg-light'
         style={{ backgroundColor: "red", borderRadius: "1.5rem" }}
       >
-        <Card.Text>
-          {brewery.city || " "} {brewery.street || " "}
-        </Card.Text>
-        <Card.Text>Phone: {" " + brewery.phone || " "}</Card.Text>
+        <Card.Text>{brewery.city || " "}</Card.Text>
+        <Card.Text>{brewery.street || " "}</Card.Text>
+        <Card.Text>{brewery.phone ? "phone: " + brewery.phone : " "}</Card.Text>
         <Card.Link
           href={brewery.website_url}
           style={{ color: "black", cursor: "pointer" }}
