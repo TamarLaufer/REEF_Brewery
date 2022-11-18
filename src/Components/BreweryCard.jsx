@@ -5,23 +5,10 @@ import { useBreweries } from "../Context/BreweriesContext";
 export const BreweryCard = ({ brewery }) => {
   const { addToFavorites, favorites, removeFromFavorites } = useBreweries();
 
-  const isIdExist = () => {
+  const isIdExistInFavorites = () => {
     const favExist = favorites.find((item) => item.id === brewery.id);
     if (favExist) return true;
     return false;
-  };
-
-  const isCardInFav = () => {
-    if (isIdExist)
-      return (
-        <Card.Link
-          style={{ color: "black", cursor: "pointer", fontSize: "13px" }}
-          onClick={() => removeFromFavorites(brewery.id)}
-        >
-          Remove from favorites
-        </Card.Link>
-      );
-    return;
   };
 
   return (
@@ -46,7 +33,11 @@ export const BreweryCard = ({ brewery }) => {
         <Card.Text>
           {brewery.city} {brewery.street}
         </Card.Text>
-        <Card.Text>Phone: {brewery.phone}</Card.Text>
+        <br />
+        <Card.Text>
+          Phone:
+          {brewery.phone}
+        </Card.Text>
         <br />
         <Card.Link
           href={brewery.website_url}
@@ -59,12 +50,16 @@ export const BreweryCard = ({ brewery }) => {
           onClick={() => addToFavorites(brewery.id)}
           variant='outline-success'
           style={{ width: "11rem", height: "3.3rem" }}
-          disabled={isIdExist()}
+          disabled={isIdExistInFavorites()}
           className='d-flex justify-content-center align-items-center pt-3'
         >
-          {isIdExist() ? <p>In favorites</p> : <p>Add to favorites</p>}
+          {isIdExistInFavorites() ? (
+            <p>In favorites</p>
+          ) : (
+            <p>Add to favorites</p>
+          )}
         </Button>
-        {isIdExist() && (
+        {isIdExistInFavorites() && (
           <Card.Link
             style={{ color: "black", cursor: "pointer", fontSize: "13px" }}
             onClick={() => removeFromFavorites(brewery.id)}

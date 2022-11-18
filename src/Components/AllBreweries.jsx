@@ -4,8 +4,13 @@ import BreweryCard from "./BreweryCard";
 import bgImage from "../Utils/breweryImg.jpg";
 
 const AllBreweries = () => {
-  const { allBreweries, addToFavorites, showFavorites, favorites } =
-    useBreweries();
+  const {
+    allBreweries,
+    showFavorites,
+    favorites,
+    breweriesByDistance,
+    showSortedByDistance,
+  } = useBreweries();
 
   const getBreweryList = () => {
     if (showFavorites === true) return favorites;
@@ -21,9 +26,13 @@ const AllBreweries = () => {
       }}
       className='d-flex justify-content-center align-items-baseline flex-wrap gap-4'
     >
-      {getBreweryList().map((brewery) => {
-        return <BreweryCard key={brewery.id} brewery={brewery} />;
-      })}
+      {showSortedByDistance
+        ? breweriesByDistance.map((brewery) => {
+            return <BreweryCard key={brewery.id} brewery={brewery} />;
+          })
+        : getBreweryList().map((brewery) => {
+            return <BreweryCard key={brewery.id} brewery={brewery} />;
+          })}
     </div>
   );
 };

@@ -11,43 +11,24 @@ export function useBreweries() {
 
 export const BreweriesProvider = ({ children }) => {
   const [allBreweries, setAllBreweries] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  // const [favorites, setFavorites] = useLocalSorage("favorites", []);
   const [favorites, setFavorites] = useState([]);
-  const FAVORITES_KEY = "favorites";
   const [showFavorites, setShowFavorites] = useState(false);
   const [cardInFavorites, setCardInFavorites] = useState(false);
   const [breweriesByDistance, setBreweriesByDistance] = useState([]);
-  const [askForLocation, setAskForLocation] = useState(false);
-
-  const geolocation = useGeolocation();
-
-  // const onGeolocationUpdate = (geolocation) => {
-  //   console.log(
-  //     "Here’s some new data from the Geolocation API: ",
-  //     geolocation.latitude,
-  //     geolocation.longitude
-  //   );
-  // };
-
-  // const askLocation = useGeolocation(
-  //   {},
-  //   onGeolocationUpdate(geolocation),
-  //   false
-  // );
+  const [showSortedByDistance, setShowSortedByDistance] = useState(false);
+  const FAVORITES_KEY = "favorites";
+  const BREWERIES_BY_DISTANCE = "breweriesByDistance";
 
   const getAllBreweries = () => {
     fetch(url.allBreweriesFetch())
       .then((res) => res.json())
       .then(
         (result) => {
-          // setLoading(true);
           setAllBreweries(result);
           console.log(result);
         },
         (error) => {
-          setLoading(true);
           setError(error);
         }
       );
@@ -58,23 +39,22 @@ export const BreweriesProvider = ({ children }) => {
       .then((res) => res.json())
       .then(
         (result) => {
-          // setLoading(true);
           setBreweriesByDistance(result);
           console.log(result);
         },
         (error) => {
-          setLoading(true);
           setError(error);
         }
       );
   };
 
   useEffect(() => {
-    console.log(
-      getBreweriesByDistance(geolocation.latitude, geolocation.longitude)
-    );
-    // console.log(askLocation);
-    // setAskForLocation(true);
+    navigator.geolocation.getCurrentPosition(function async(position) {
+      getBreweriesByDistance(
+        position.coords.latitude,
+        position.coords.longitude
+      );
+    });
     getAllBreweries();
     setFavorites(loadFavorites());
   }, []);
@@ -87,6 +67,19 @@ export const BreweriesProvider = ({ children }) => {
 
   const saveFavorites = (favorites) => {
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
+  };
+
+  const loadBreweriesByDistance = () => {
+    const json = localStorage.getItem(BREWERIES_BY_DISTANCE);
+    if (json) return JSON.parse(json);
+    return [];
+  };
+
+  const saveBreweriesByDistance = (breweriesByDistance) => {
+    localStorage.setItem(
+      BREWERIES_BY_DISTANCE,
+      JSON.stringify(breweriesByDistance)
+    );
   };
 
   const addToFavorites = (id) => {
@@ -119,6 +112,10 @@ export const BreweriesProvider = ({ children }) => {
         setShowFavorites,
         cardInFavorites,
         setCardInFavorites,
+        showSortedByDistance,
+        setShowSortedByDistance,
+        breweriesByDistance,
+        setBreweriesByDistance,
       }}
     >
       {children}

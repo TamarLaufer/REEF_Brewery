@@ -4,7 +4,7 @@ import { Badge, Button, Container, Form, Nav, Navbar } from "react-bootstrap";
 import { useBreweries } from "../Context/BreweriesContext";
 
 const Header = () => {
-  const { setShowFavorites } = useBreweries();
+  const { setShowFavorites, setShowSortedByDistance } = useBreweries();
 
   return (
     <Navbar bg='light' expand='lg' sticky='top'>
@@ -24,17 +24,32 @@ const Header = () => {
             style={{ maxHeight: "100px" }}
             navbarScroll
           ></Nav>
-          <div className='d-flex justify-content-center align-items-center gap-2'>
+          <div className='d-flex justify-content-start align-items-center flex-wrap gap-2'>
             <Button
               variant='outline-success'
-              onClick={() => setShowFavorites(false)}
+              onClick={() => {
+                setShowFavorites(false);
+                setShowSortedByDistance(false);
+              }}
             >
               All Breweries
             </Button>
 
             <Button
               variant='outline-success'
-              onClick={() => setShowFavorites(true)}
+              onClick={() => {
+                setShowFavorites(false);
+                setShowSortedByDistance(true);
+              }}
+            >
+              All Breweries sorted by distance
+            </Button>
+            <Button
+              variant='outline-success'
+              onClick={() => {
+                setShowFavorites(true);
+                setShowSortedByDistance(false);
+              }}
             >
               Favorites
             </Button>
