@@ -1,11 +1,17 @@
 import React, { useContext, useState, useEffect } from "react";
 import url from "../Utils/URLs";
 
+// CR: No error handling
 const BreweriesContext = React.createContext();
 
 export function useBreweries() {
   return useContext(BreweriesContext);
 }
+// CR: I don't like context personally, due to several reasons:
+// CR: a. They contain both a state and logic, meaning its both a Service and a Store
+// CR: b. It's now what we call SRP, or single responsibility, meaning I will have to modify this file for both accesing breweries and the state itself
+// CR: c. I can't inject to a component only the data (state), and it has to have access to the fetch mechanics as well.
+// CR: d. It doesn't allow me to use an Async/Await API, but to use simple promises.
 export const BreweriesProvider = ({ children }) => {
   const view = {
     ALL: "all",
@@ -49,6 +55,7 @@ export const BreweriesProvider = ({ children }) => {
       );
   };
 
+  // CR: Why wrap it all in useEffect? the tirgger is empty
   useEffect(() => {
     navigator.geolocation.getCurrentPosition(function async(position) {
       getBreweriesByDistance(
@@ -67,6 +74,8 @@ export const BreweriesProvider = ({ children }) => {
   };
 
   const saveFavorites = (favorites) => {
+    // CR: Should be contained in "FavoriteBreweriesService", which will abstractify the entire localStorage usage,
+    // CR: which would allow us to move later in the future to saving the favorites in both a different mechanism and location (e.g server/database)
     localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
   };
 

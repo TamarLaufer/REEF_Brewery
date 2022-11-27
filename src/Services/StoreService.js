@@ -1,0 +1,1 @@
+// CR: Simple API to store and load data from storage (e.g localStorage)
